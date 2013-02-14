@@ -104,38 +104,42 @@ class WikibaseApi extends Api {
 	/**
 	 * @param string $entity id of the entity you are adding the claim to
 	 * @param string $snakType the type of the snak
-	 * @param string $property id of the snaks property
-	 * @param string $value value of the snak when creating a claim with a snak that has a value
+	 * @param string $property id of the snak property
+	 * @param string|null $value value of the snak when creating a claim with a snak that has a value
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
 	 * @throws Exception
 	 */
-	public function createClaim( $entity, $snakType, $property, $value, $baseRevisionId = null, $summary = '' ) {
+	public function createClaim( $entity, $snakType, $property, $value = null, $baseRevisionId = null, $summary = '' ) {
 		$params = array(
 			'action' => 'wbcreateclaim',
 			'entity' => $entity,
-			'snakType' => $snakType,
-			'property' => $property,
-			'value' => $value
+			'snaktype' => $snakType,
+			'property' => $property
 		);
+		if( $value !== null ) {
+			$params['value'] = $value;
+		}
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}
 
 	/**
 	 * @param string $claim GUID identifying the claim
 	 * @param string $snakType the type of the snak
-	 * @param string $value the value to set the datavalue of the the main snak of the claim to
+	 * @param string|null $value the value to set the datavalue of the the main snak of the claim to
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
 	 * @throws Exception
 	 */
-	public function setClaimValue( $claim, $snakType, $value, $baseRevisionId = null, $summary = '' ) {
+	public function setClaimValue( $claim, $snakType, $value = null, $baseRevisionId = null, $summary = '' ) {
 		$params = array(
 			'action' => 'wbsetclaimvalue',
 			'claim' => $claim,
-			'snakType' => $snakType,
-			'value' => $value
+			'snaktype' => $snakType
 		);
+		if( $value !== null ) {
+			$params['value'] = $value;
+		}
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}
 
@@ -155,7 +159,7 @@ class WikibaseApi extends Api {
 
 	/**
 	 * @param string $statement GUID identifying the statement
-	 * @param string $snakType the snaks to set the reference to. JSON object with property ids pointing to arrays containing the snaks for that property
+	 * @param string $snaks the snaks to set the reference to. JSON object with property ids pointing to arrays containing the snaks for that property
 	 * @param string $reference a hash of the reference that should be updated. When not provided, a new reference is created
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change

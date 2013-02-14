@@ -31,9 +31,14 @@ class Claim {
 	protected $entity;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $id;
+
+	/**
+	 * @var string the id used internally
+	 */
+	protected $internalId;
 
 	/**
 	 * @var Snak
@@ -46,6 +51,11 @@ class Claim {
 	protected $qualifiers = array();
 
 	/**
+	 * @var array
+	 */
+	protected $changes = array();
+
+	/**
 	 * @protected
 	 * @param Entity $entity
 	 * @param array $data
@@ -56,22 +66,37 @@ class Claim {
 	}
 
 	protected function fillData( array $data ) {
+		if( isset( $data['mainsnak'] ) ) {
+			$this->mainSnak = Snak::newFromArray( $data['mainsnak'] );
+		}
 		if( isset( $data['id'] ) ) {
 			$this->id = $data['id'];
 		}
-		if( isset( $data['mainsnak'] ) ) {
-			$this->mainSnak = Snak::newFromArray( $this, $data['mainsnak'] );
+		if( $this->internalId === null ) {
+			if( $this->id !== null ) {
+				$this->internalId = $this->id;
+			} else {
+				$this->internalId = time() . $this->mainSnak->getPropertyId() . $this->mainSnak->getDataValue(); //TODO improve
+			}
 		}
 	}
 
 	/**
 	 * @param Entity $entity
-	 * @param Snak $snak
+	 * @param Snak $snak snak to be used as main snak
+	 * @param string $type claim type
 	 * @return Claim
+	 * @throws Exception
 	 */
-	public function newFromSnak( WikibaseApi $api, Snak $snak ) {
-		$claim = new self( $entity, array() );
-		$claim->setMainSnak( $snak );
+	public function newFromSnak( Entity $entity, Snak $snak, $type = 'claim' ) {
+		$claim = self::newFromArray( $entity, array(
+			'mainsnak' => $snak->toArray(),
+			'type' => $type
+		) );
+		$claim->changes = array(
+			'mainsnak' => $snak->toArray()
+		);
+		$entity->addClaim( $claim );
 		return $claim;
 	}
 
@@ -101,9 +126,68 @@ class Claim {
 	}
 
 	/**
+	 * @protected
+	 * @return string
+	 */
+	public function getInternalId() {
+		return $this->internalId;
+	}
+
+	/**
 	 * @return Snak
 	 */
 	public function getMainSnak() {
 		return $this->mainSnak;
+	}
+
+	/**
+	 * @param Snak a snak with the same property
+	 * @throw Exception
+	 */
+	public function setMainSnak( Snak $snak ) {
+		if( $this->mainSnak->getPropertyID() !== $snak->getPropertyID() ) {
+			throw new Exception( 'Different property id!' );
+		}
+		$this->mainSnak = $snak;
+		$this->changes['mainsnak'] = $snak->toArray();
+	}
+
+	/**
+	 * @param string $summary summary for the change
+	 * @throws Exception
+	 * @todo push back changes of this claim and create it if needed
+	 */
+	public function save( $summary = '' ) {
+		if( $this->changes === array() ) {
+			return; //Nothing to do
+		}
+
+		if( isset( $this->changes['mainsnak'] ) ) {
+			if( !isset( $this->changes['mainsnak']['snaktype'] ) || !isset( $this->changes['mainsnak']['property'] ) ) {
+				throw new Exeption( 'The main snak does not have required data' );
+			}
+			$value = isset( $this->changes['mainsnak']['datavalue'] ) ? $this->changes['mainsnak']['datavalue'] : null;
+
+			if( $this->id === null ) {
+				//create claim
+				$result = $this->entity->getApi()->createClaim( $this->entity->getId(), $this->changes['mainsnak']['snaktype'], $this->changes['mainsnak']['property'], $value, $this->entity->getLastRevisionId(), $summary );
+			} else {
+				$result = $this->entity->getApi()->setClaimValue( $this->id, $this->changes['mainsnak']['snaktype'], $value, $this->entity->getLastRevisionId(), $summary );
+			}
+			$this->updateDataFromResult( $result );
+			unset( $this->changes['mainsnak'] );
+		}
+	}
+
+	/**
+	 * Update data from the result of an API call
+	 */
+	protected function updateDataFromResult( $result ) {
+		if( isset( $result['claim'] ) ) {
+			$this->fillData( $result['claim'] );
+		}
+		if( isset( $result['pageinfo']['lastrevid'] ) ) {
+			$this->entity->setLastRevisionId( $result['pageinfo']['lastrevid'] );
+		}
 	}
 }

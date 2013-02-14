@@ -70,4 +70,12 @@ class Item extends Entity {
 			'title' => $title
 		);
 	}
+
+	/**
+	 * @param Snak the snak use as main snak
+	 * @throws Exception
+	 */
+	public function createStatementForSnak( Snak $snak ) {
+		return Claim::newFromSnak( $this, $snak, 'statement' );
+	}
 }

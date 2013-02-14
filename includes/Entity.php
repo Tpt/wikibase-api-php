@@ -67,7 +67,7 @@ abstract class Entity {
 
 	/**
 	 * @protected
-	 * @param WikibaseApi $ai
+	 * @param WikibaseApi $api
 	 * @param array $data
 	 */
 	public function __construct( WikibaseApi $api, array $data ) {
@@ -109,7 +109,7 @@ abstract class Entity {
 				$this->claims[$prop] = array();
 				foreach( $list as $val ) {
 					$claim = Claim::newFromArray( $this, $val );
-					$this->claims[$prop][$claim->getId()] = $claim;
+					$this->claims[$prop][$claim->getInternalId()] = $claim;
 				}
 			}
 		}
@@ -297,7 +297,7 @@ abstract class Entity {
 	/**
 	 * @param string $summary summary for the change
 	 * @throws Exception
-	 * @todo push back changes
+	 * @todo push back changes for all data excepts claims
 	 */
 	public function save( $summary = '' ) {
 		if( $this->changes === array() ) {
@@ -308,5 +308,45 @@ abstract class Entity {
 			$this->fillData( $result['entity'] );
 		}
 		$this->changes = array();
+	}
+
+	/**
+	 * @protected
+	 * @return WikibaseApi the API used
+	 */
+	public function getApi() {
+		return $this->api;
+	}
+
+	/**
+	 * @protected
+	 * @return integer|null the last revision ID
+	 */
+	public function getLastRevisionId() {
+		return $this->lastRevisionId;
+	}
+
+	/**
+	 * @protected
+	 * @param $lastRevisionId integer the last revision ID
+	 */
+	public function setLastRevisionId( $lastRevisionId ) {
+		$this->lastRevisionId = $lastRevisionId;
+	}
+
+	/**
+	 * @protected
+	 * @param Claim $claim
+	 */
+	public function addClaim( Claim $claim ) {
+		$this->claims[$claim->getMainSnak()->getPropertyId()][$claim->getInternalId()] = $claim;
+	}
+
+	/**
+	 * @protected
+	 * @param Claim $claim
+	 */
+	public function removeClaim( Claim $claim ) {
+		unset( $this->claims[$claim->getMainSnak()->getPropertyId()][$claim->getInternalId()] );
 	}
 }

@@ -40,38 +40,30 @@ class Snak {
 	/**
 	 * @var mixed
 	 */
-	protected $datavalue;
+	protected $dataValue;
 
 	/**
-	 * @protected
-	 * @param Claim $claim
-	 * @param array $data
+	 * string $type type of snak
+	 * @param string $propertyId id of the property
+	 * @param mixed|null $dataValue value of the property (optional)
 	 */
-	public function __construct( Claim $claim, array $data ) {
-		$this->claim = $claim;
-		$this->fillData( $data );
-	}
-
-	protected function fillData( array $data ) {
-		if( isset( $data['snaktype'] ) ) {
-			$this->type = $data['snaktype'];
-		}
-		if( isset( $data['property'] ) ) {
-			$this->propertyId = $data['property'];
-		}
-		if( isset( $data['datavalue'] ) ) {
-			$this->datavalue = $data['datavalue'];
-		}
+	public function __construct( $type, $propertyId, $dataValue = null ) {
+		$this->type = $type;
+		$this->propertyId = $propertyId;
+		$this->dataValue = $dataValue;
 	}
 
 	/**
-	 * @param Claim $claim
 	 * @param array $data
 	 * @return Snak
 	 * @throws Exception
 	 */
-	public function newFromArray( Claim $claim, array $data ) {
-		return new Snak( $claim, $data );
+	public function newFromArray( array $data ) {
+		if( !isset( $data['snaktype'] ) || !isset( $data['property'] ) ) {
+			throw new Exeption( 'Invalid Snak serialization' );
+		}
+		$dataValue = isset( $data['datavalue'] ) ? $data['datavalue'] : null;
+		return new self( $data['snaktype'], $data['property'], $dataValue );
 	}
 
 	/**
@@ -86,5 +78,40 @@ class Snak {
 	 */
 	public function getPropertyId() {
 		return $this->propertyId;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDataValue() {
+		return $this->dataValue;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType( $type ) {
+		$this->type = $type;
+	}
+
+	/**
+	 * @param string $value
+	 */
+	public function setDataValue( $value ) {
+		$this->dataValue = $value;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray() {
+		$array = array(
+			'snaktype' => $this->type,
+			'property' => $this->propertyId
+		);
+		if( $this->dataValue !== null ) {
+			$array['datavalue'] = $this->dataValue;
+		}
+		return $array;
 	}
 }

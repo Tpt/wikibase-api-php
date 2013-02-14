@@ -26,7 +26,6 @@
 class Api {
 	protected $http;
 	protected $wiki;
-	protected $user;
 	protected $editToken;
 	protected $botEdits = true;
 	protected $editLimit = true;
@@ -86,7 +85,6 @@ class Api {
 		$response = $this->http->post( $url, $postFields );
 		$result = json_decode( $response, true );
 		if( isset( $result['error'] ) ) {
-print_r( $result );
 			throw new Exception( $result['error']['info'] );
 		}
 		return $result;
