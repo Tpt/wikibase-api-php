@@ -44,10 +44,17 @@ class Snak {
 
 	/**
 	 * string $type type of snak
-	 * @param string $propertyId id of the property
+	 * @param EntityId|string $propertyId id of the property
 	 * @param \DataValues\DataValue|null $dataValue value of the property (optional)
+	 * @throws Exception
 	 */
 	public function __construct( $type, $propertyId, \DataValues\DataValue $dataValue = null ) {
+		if( is_string( $propertyId ) ) {
+			$propertyId = EntityId::newFromPrefixedId( $propertyId );
+		}
+		if( !( $propertyId instanceof EntityId ) || $propertyId->getEntityType() !== 'property' ) {
+			throw new Exception( '$propertyId must be a valid property id' );
+		}
 		$this->type = $type;
 		$this->propertyId = $propertyId;
 		$this->dataValue = $dataValue;
@@ -74,7 +81,7 @@ class Snak {
 	}
 
 	/**
-	 * @return string
+	 * @return EntityId
 	 */
 	public function getPropertyId() {
 		return $this->propertyId;
@@ -107,7 +114,7 @@ class Snak {
 	public function toArray() {
 		$array = array(
 			'snaktype' => $this->type,
-			'property' => $this->propertyId
+			'property' => $this->propertyId->getPrefixedId()
 		);
 		if( $this->dataValue !== null ) {
 			$array['datavalue'] = $this->dataValue->toArray();

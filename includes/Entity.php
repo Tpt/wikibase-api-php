@@ -26,7 +26,7 @@
 abstract class Entity {
 
 	/**
-	 * @var string
+	 * @var EntityId
 	 */
 	protected $id = null;
 
@@ -77,7 +77,7 @@ abstract class Entity {
 
 	protected function fillData( array $data ) {
 		if( isset( $data['id'] ) ) {
-			$this->id = $data['id'];
+			$this->id = EntityId::newFromPrefixedId( $data['id'] );
 		}
 		if( isset( $data['lastrevid'] ) ) {
 			$this->lastRevisionId = $data['lastrevid'];
@@ -142,7 +142,7 @@ abstract class Entity {
 	}
 
 	/**
-	 * @return string
+	 * @return EntityId
 	 */
 	public function getId() {
 		return $this->id;
@@ -303,7 +303,7 @@ abstract class Entity {
 		if( $this->changes === array() ) {
 			return; //Nothing to do
 		}
-		$result = $this->api->editEntity( $this->id, $this->changes, $this->lastRevisionId, $summary );
+		$result = $this->api->editEntity( $this->id->getPrefixedId(), $this->changes, $this->lastRevisionId, $summary );
 		if( isset( $result['entity'] ) ) {
 			$this->fillData( $result['entity'] );
 		}
@@ -339,7 +339,7 @@ abstract class Entity {
 	 * @param Claim $claim
 	 */
 	public function addClaim( Claim $claim ) {
-		$this->claims[$claim->getMainSnak()->getPropertyId()][$claim->getInternalId()] = $claim;
+		$this->claims[$claim->getMainSnak()->getPropertyId()->getPrefixedId()][$claim->getInternalId()] = $claim;
 	}
 
 	/**
@@ -347,6 +347,6 @@ abstract class Entity {
 	 * @param Claim $claim
 	 */
 	public function removeClaim( Claim $claim ) {
-		unset( $this->claims[$claim->getMainSnak()->getPropertyId()][$claim->getInternalId()] );
+		unset( $this->claims[$claim->getMainSnak()->getPropertyId()->getPrefixedId()][$claim->getInternalId()] );
 	}
 }

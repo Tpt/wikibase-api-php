@@ -145,7 +145,7 @@ class Claim {
 	 * @throw Exception
 	 */
 	public function setMainSnak( Snak $snak ) {
-		if( $this->mainSnak->getPropertyID() !== $snak->getPropertyID() ) {
+		if( !$this->mainSnak->getPropertyID()->equals( $snak->getPropertyID() ) ) {
 			throw new Exception( 'Different property id!' );
 		}
 		$this->mainSnak = $snak;
@@ -170,7 +170,7 @@ class Claim {
 
 			if( $this->id === null ) {
 				//create claim
-				$result = $this->entity->getApi()->createClaim( $this->entity->getId(), $this->changes['mainsnak']['snaktype'], $this->changes['mainsnak']['property'], $value, $this->entity->getLastRevisionId(), $summary );
+				$result = $this->entity->getApi()->createClaim( $this->entity->getId()->getPrefixedId(), $this->changes['mainsnak']['snaktype'], $this->changes['mainsnak']['property'], $value, $this->entity->getLastRevisionId(), $summary );
 			} else {
 				$result = $this->entity->getApi()->setClaimValue( $this->id, $this->changes['mainsnak']['snaktype'], $value, $this->entity->getLastRevisionId(), $summary );
 			}
