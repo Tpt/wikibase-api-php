@@ -17,7 +17,7 @@ $entities = $api->getEntitiesFromIds( array( 'q82' ) );
 $entity = $entities['q82'];
 
 //Create a new statement
-$statement = $entity->createStatementForSnak( new Snak( 'value', 'p3', '{"entity-type": "item", "numeric-id": 16 }' ) );
+$statement = $entity->createStatementForSnak( new Snak( 'value', 'p3', EntityId::newFromPrefixedId( 'Q22' ) ) );
 
 //Save it
 $statement->save();

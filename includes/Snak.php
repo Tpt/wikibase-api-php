@@ -38,16 +38,16 @@ class Snak {
 	protected $propertyId;
 
 	/**
-	 * @var mixed
+	 * @var \DataValues\DataValue
 	 */
 	protected $dataValue;
 
 	/**
 	 * string $type type of snak
 	 * @param string $propertyId id of the property
-	 * @param mixed|null $dataValue value of the property (optional)
+	 * @param \DataValues\DataValue|null $dataValue value of the property (optional)
 	 */
-	public function __construct( $type, $propertyId, $dataValue = null ) {
+	public function __construct( $type, $propertyId, \DataValues\DataValue $dataValue = null ) {
 		$this->type = $type;
 		$this->propertyId = $propertyId;
 		$this->dataValue = $dataValue;
@@ -62,7 +62,7 @@ class Snak {
 		if( !isset( $data['snaktype'] ) || !isset( $data['property'] ) ) {
 			throw new Exeption( 'Invalid Snak serialization' );
 		}
-		$dataValue = isset( $data['datavalue'] ) ? $data['datavalue'] : null;
+		$dataValue = isset( $data['datavalue'] ) ? \DataValues\DataValueFactory::singleton()->newDataValue( $data['datavalue']['type'], $data['datavalue']['value'] ) : null;
 		return new self( $data['snaktype'], $data['property'], $dataValue );
 	}
 
@@ -81,7 +81,7 @@ class Snak {
 	}
 
 	/**
-	 * @return string
+	 * @return \DataValues\DataValue
 	 */
 	public function getDataValue() {
 		return $this->dataValue;
@@ -95,9 +95,9 @@ class Snak {
 	}
 
 	/**
-	 * @param string $value
+	 * @param \DataValues\DataValue $value
 	 */
-	public function setDataValue( $value ) {
+	public function setDataValue( \DataValues\DataValue $value ) {
 		$this->dataValue = $value;
 	}
 
@@ -110,7 +110,7 @@ class Snak {
 			'property' => $this->propertyId
 		);
 		if( $this->dataValue !== null ) {
-			$array['datavalue'] = $this->dataValue;
+			$array['datavalue'] = $this->dataValue->toArray();
 		}
 		return $array;
 	}

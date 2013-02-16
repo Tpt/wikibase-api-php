@@ -166,7 +166,7 @@ class Claim {
 			if( !isset( $this->changes['mainsnak']['snaktype'] ) || !isset( $this->changes['mainsnak']['property'] ) ) {
 				throw new Exeption( 'The main snak does not have required data' );
 			}
-			$value = isset( $this->changes['mainsnak']['datavalue'] ) ? $this->changes['mainsnak']['datavalue'] : null;
+			$value = isset( $this->changes['mainsnak']['datavalue'] ) ? $this->changes['mainsnak']['datavalue']['value'] : null;
 
 			if( $this->id === null ) {
 				//create claim

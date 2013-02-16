@@ -105,7 +105,7 @@ class WikibaseApi extends Api {
 	 * @param string $entity id of the entity you are adding the claim to
 	 * @param string $snakType the type of the snak
 	 * @param string $property id of the snak property
-	 * @param string|null $value value of the snak when creating a claim with a snak that has a value
+	 * @param mixed|null $value value of the snak when creating a claim with a snak that has a value
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
 	 * @throws Exception
@@ -118,7 +118,7 @@ class WikibaseApi extends Api {
 			'property' => $property
 		);
 		if( $value !== null ) {
-			$params['value'] = $value;
+			$params['value'] = json_encode( $value );
 		}
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}
@@ -126,7 +126,7 @@ class WikibaseApi extends Api {
 	/**
 	 * @param string $claim GUID identifying the claim
 	 * @param string $snakType the type of the snak
-	 * @param string|null $value the value to set the datavalue of the the main snak of the claim to
+	 * @param mixed|null $value the value to set the datavalue of the the main snak of the claim to
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
 	 * @throws Exception
@@ -138,7 +138,7 @@ class WikibaseApi extends Api {
 			'snaktype' => $snakType
 		);
 		if( $value !== null ) {
-			$params['value'] = $value;
+			$params['value'] = json_encode( $value );
 		}
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}
@@ -182,6 +182,7 @@ class WikibaseApi extends Api {
 	 * @param string[] $postParams params to POST
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
+	 * @return array
 	 * @throws Exception
 	 * @todo error
 	 */

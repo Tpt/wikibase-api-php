@@ -1,13 +1,22 @@
 <?php
+define( 'DATAVALUES', true );
+include_once __DIR__ . '/DataValues/DataValues.php';
+
 $dir = __DIR__ . '/includes/';
+include_once $dir . 'Api.php';
+include_once $dir . 'WikibaseApi.php';
+include_once $dir . 'Http.php';
+include_once $dir . 'Entity.php';
+include_once $dir . 'Item.php';
+include_once $dir . 'Property.php';
+include_once $dir . 'Claim.php';
+include_once $dir . 'Statement.php';
+include_once $dir . 'Snak.php';
+include_once $dir . 'EntityId.php';
 
-include $dir . 'Api.php';
-include $dir . 'WikibaseApi.php';
-include $dir . 'Http.php';
-include $dir . 'Entity.php';
-include $dir . 'Item.php';
-include $dir . 'Property.php';
-include $dir . 'Claim.php';
-include $dir . 'Statement.php';
-include $dir . 'Snak.php';
-
+$wgDataValues['wikibase-entityid'] = 'EntityId';
+$wgDataTypes += array(
+	'wikibase-entityid' => array(
+		'datavalue' => 'wikibase-entityid',
+	)
+);

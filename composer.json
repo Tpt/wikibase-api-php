@@ -15,6 +15,6 @@
 		"lib-curl": "*"
 	},
 	"autoload": {
-		"classmap": ["includes/"]
+		"classmap": ["includes/", "DataValues/"]
 	}
 }
