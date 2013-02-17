@@ -20,9 +20,9 @@ $entity = $entities['q82'];
 $statement = $entity->createStatementForSnak( new Snak( 'value', 'p3', EntityId::newFromPrefixedId( 'Q22' ) ) );
 
 //Save it
-$statement->save();
+$statement->save( 'Test of wikibase-php-lib' );
 
-//Create a new statement
+//Change the main value of the statement
 $statement->setMainSnak( new Snak( 'novalue', 'p3' ) );
 
 //Save the change
@@ -30,6 +30,9 @@ $statement->save();
 
 //See the list of claims
 print_r($entity->getClaims());
+
+//Remove the created statement
+$statement->deleteAndSave( 'End of test' );
 
 //Log out
 $api->logout();

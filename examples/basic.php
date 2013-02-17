@@ -32,7 +32,7 @@ $entity->removeAlias( 'en', 'Test2' );
 $entity->setSitelink( 'frwiki', '' );
 
 //Save changes
-$entity->save( 'Test of a new lib by User:Tpt' );
+$entity->save( 'Test of wikibase-php-lib' );
 
 //See the updated aliases in English
 print_r($entity->getAlias( 'en' ));

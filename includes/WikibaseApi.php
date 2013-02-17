@@ -152,7 +152,7 @@ class WikibaseApi extends Api {
 	public function removeClaims( array $claims, $baseRevisionId = null, $summary = '' ) {
 		$params = array(
 			'action' => 'wbremoveclaims',
-			'claims' => implode( $claims, '|' )
+			'claim' => implode( $claims, '|' )
 		);
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}

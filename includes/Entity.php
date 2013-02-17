@@ -343,6 +343,8 @@ abstract class Entity {
 	}
 
 	/**
+	 * It's not the method you are looking for. For deleting a claim and push the change to the database, use Claimm::deleteAndSave
+	 *
 	 * @protected
 	 * @param Claim $claim
 	 */

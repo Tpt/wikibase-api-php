@@ -155,7 +155,6 @@ class Claim {
 	/**
 	 * @param string $summary summary for the change
 	 * @throws Exception
-	 * @todo push back changes of this claim and create it if needed
 	 */
 	public function save( $summary = '' ) {
 		if( $this->changes === array() ) {
@@ -189,5 +188,18 @@ class Claim {
 		if( isset( $result['pageinfo']['lastrevid'] ) ) {
 			$this->entity->setLastRevisionId( $result['pageinfo']['lastrevid'] );
 		}
+	}
+
+	/**
+	 * Delete the claim and push the change to the database
+	 *
+	 * @param string $summary summary for the change
+	 * @throws Exception
+	 */
+	public function deleteAndSave( $summary = '' ) {
+		if( $this->id !== null ) {
+			$this->entity->getApi()->removeClaims( array( $this->id ), $this->entity->getLastRevisionId(), $summary );
+		}
+		$this->entity->removeClaim( $this );
 	}
 }
