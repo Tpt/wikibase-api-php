@@ -5,7 +5,7 @@
 include '../include.php';
 
 //Instance the Api object with the base domain of the wiki and the user agent.
-$api = new WikibaseApi( 'wikidata-test-repo.wikimedia.de', 'UserTptBot/1.0 WikibasePhpLib/0.1' );
+$api = new WikibaseApi( 'wikidata-test-repo.wikimedia.de', 'WikibasePhpLibExample/0.1' );
 
 //login with user:demo and test as password
 $api->login( 'demo', 'test' );

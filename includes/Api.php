@@ -34,12 +34,12 @@ class Api {
 
 	/**
 	 * @param string $wiki the base url of the wiki like "fr.wikipedia.org"
-	 * @param string $agent user agent for HTTP requests
+	 * @param string $agent user agent for HTTP requests. The user agent of the lib is added at the end of the string
 	 * @param bollean $editLimit limit the number of edit each second
 	 * @param Http|null $http the http object to use. By default a new object is created
 	 */
 	public function __construct( $wiki, $agent, $editLimit = true, $http = null ) {
-		$this->http = ($http instanceof Http) ? $http : new Http( $agent );
+		$this->http = ($http instanceof Http) ? $http : new Http( trim( $agent ) . ' WikibasePhpLib/0.1' );
 		$this->wiki = $wiki;
 		$this->editLimit = $editLimit;
 	}
