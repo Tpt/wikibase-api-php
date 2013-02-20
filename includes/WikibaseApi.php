@@ -43,6 +43,17 @@ class WikibaseApi extends Api {
 		$response = $this->get( $params );
 		return $this->parseGetEntitiesApiResponse( $response );
 	}
+    
+	/**
+	 * @param string $id the ID of the entities to get the data from
+	 * @param string[] $languages languages for labels/descriptions
+	 * @return Entity[]
+	 * @throws Exception
+	 * @todo Error management
+	 */
+    public function getEntryFromId( $id, array $languages = array() ) {
+        return $this->getEntriesFromIds( Array( $id ), $languages );
+    }
 
 	/**
 	 * @param string[] $sites identifier for the site on which the corresponding page resides
