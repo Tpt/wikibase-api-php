@@ -78,6 +78,20 @@ class WikibaseApi extends Api {
 	}
 
 	/**
+	 * @param string $site identifier for the site on which the corresponding page resides
+	 * @param string $title the title of the corresponding page
+	 * @param string[] $languages Languages for labels/descriptions
+	 * @return Entity
+	 * @throws Exception
+	 * @todo Error management
+	 */
+	public function getEntityFromSitelink( $site, $title, array $languages = array() ) {
+        $entities = $this->getEntitiesFromSitelinks( Array( $site ), Array( $title ), $languages );
+        foreach( $entities as $entity )
+            return $entity;
+	}
+
+	/**
 	 * @param array $result the wbgetentities api response
 	 * @return Entity[]
 	 */
