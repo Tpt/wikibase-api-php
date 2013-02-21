@@ -47,12 +47,14 @@ class WikibaseApi extends Api {
 	/**
 	 * @param string $id the ID of the entities to get the data from
 	 * @param string[] $languages languages for labels/descriptions
-	 * @return Entity[]
+	 * @return Entity
 	 * @throws Exception
 	 * @todo Error management
 	 */
-    public function getEntryFromId( $id, array $languages = array() ) {
-        return $this->getEntriesFromIds( Array( $id ), $languages );
+    public function getEntityFromId( $id, array $languages = array() ) {
+        $entities = $this->getEntitiesFromIds( Array( $id ), $languages );
+        $entity = $entities[$id];
+        return $entity;
     }
 
 	/**
