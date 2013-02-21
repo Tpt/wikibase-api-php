@@ -53,7 +53,8 @@ class WikibaseApi extends Api {
 	 */
     public function getEntityFromId( $id, array $languages = array() ) {
         $entities = $this->getEntitiesFromIds( Array( $id ), $languages );
-        return $entities[$id];
+        foreach( $entities as $entity )
+            return $entity;
     }
 
 	/**
