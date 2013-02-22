@@ -43,19 +43,20 @@ class WikibaseApi extends Api {
 		$response = $this->get( $params );
 		return $this->parseGetEntitiesApiResponse( $response );
 	}
-    
+
 	/**
 	 * @param string $id the ID of the entities to get the data from
 	 * @param string[] $languages languages for labels/descriptions
-	 * @return Entity
+	 * @return Entity|null
 	 * @throws Exception
-	 * @todo Error management
 	 */
-    public function getEntityFromId( $id, array $languages = array() ) {
-        $entities = $this->getEntitiesFromIds( Array( $id ), $languages );
-        foreach( $entities as $entity )
-            return $entity;
-    }
+	public function getEntityFromId( $id, array $languages = array() ) {
+		$entities = $this->getEntitiesFromIds( array( $id ), $languages );
+		foreach( $entities as $entity ) {
+			return $entity;
+		}
+		return null;
+	}
 
 	/**
 	 * @param string[] $sites identifier for the site on which the corresponding page resides
@@ -63,7 +64,6 @@ class WikibaseApi extends Api {
 	 * @param string[] $languages Languages for labels/descriptions
 	 * @return Entity[]
 	 * @throws Exception
-	 * @todo Error management
 	 */
 	public function getEntitiesFromSitelinks( array $sites, array $titles, array $languages = array() ) {
 		$params = array(
@@ -82,14 +82,15 @@ class WikibaseApi extends Api {
 	 * @param string $site identifier for the site on which the corresponding page resides
 	 * @param string $title the title of the corresponding page
 	 * @param string[] $languages Languages for labels/descriptions
-	 * @return Entity
+	 * @return Entity|null
 	 * @throws Exception
-	 * @todo Error management
 	 */
 	public function getEntityFromSitelink( $site, $title, array $languages = array() ) {
-        $entities = $this->getEntitiesFromSitelinks( Array( $site ), Array( $title ), $languages );
-        foreach( $entities as $entity )
-            return $entity;
+		$entities = $this->getEntitiesFromSitelinks( array( $site ), array( $title ), $languages );
+		foreach( $entities as $entity ) {
+			return $entity;
+		}
+		return null;
 	}
 
 	/**
