@@ -10,11 +10,8 @@ $api = new WikibaseApi( 'wikidata-test-repo.wikimedia.de', 'WikibasePhpLibExampl
 //login with user:demo and test as password
 $api->login( 'demo', 'test' );
 
-//Get some entities
-$entities = $api->getEntitiesFromIds( array( 'q82' ) );
-
-//Get the entity q82 (we supposed here that all works fine)
-$entity = $entities['q82'];
+//Get an entity
+$entity = $api->getEntityFromId( 'q82' );
 
 //Create a new statement
 $statement = $entity->createStatementForSnak( new Snak( 'value', 'p3', EntityId::newFromPrefixedId( 'Q22' ) ) );
