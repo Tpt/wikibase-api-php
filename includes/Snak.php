@@ -25,7 +25,7 @@
  *
  * @todo datavalue managment
  */
-class Snak {
+class Snak implements Comparable, Copyable {
 
 	/**
 	 * @var string
@@ -88,7 +88,7 @@ class Snak {
 	}
 
 	/**
-	 * @return \DataValues\DataValue
+	 * @return \DataValues\DataValue|null
 	 */
 	public function getDataValue() {
 		return $this->dataValue;
@@ -120,5 +120,28 @@ class Snak {
 			$array['datavalue'] = $this->dataValue->toArray();
 		}
 		return $array;
+	}
+
+	/**
+	 * @see Comparable::equals
+	 *
+	 * @param mixed $value
+	 * @return boolean
+	 */
+	public function equals( $value ) {
+		return $value instanceof self
+			&& $this->getType() === $value->getType()
+			&& $this->getPropertyId()->equals( $value->getPropertyId() )
+			&& ( $this->getDataValue() === null && $value->getDataValue() === null ) || ( $this->getDataValue()->equals( $value->getDataValue() ) );
+	}
+
+	/**
+	 * @see Copyable::getCopy
+	 *
+	 * @return Snak
+	 */
+	public function getCopy() {
+		$value = ( $this->dataValue !== null ) ? $this->dataValue->getCopy() : null;
+		return new self( $this->type, $this->propertyId, $value );
 	}
 }
