@@ -26,6 +26,7 @@
 class WikibaseApi extends Api {
 
 	/**
+	 * @deprecated The function will return the result array. For getting Entity objects, use EntityProvider::getEntityFromIds
 	 * @param string[] $ids the IDs of the entities to get the data from
 	 * @param string[] $languages languages for labels/descriptions
 	 * @return Entity[]
@@ -45,6 +46,7 @@ class WikibaseApi extends Api {
 	}
 
 	/**
+	 * @deprecated use EntityProvider::getEntityFromId
 	 * @param string $id the ID of the entities to get the data from
 	 * @param string[] $languages languages for labels/descriptions
 	 * @return Entity|null
@@ -59,6 +61,7 @@ class WikibaseApi extends Api {
 	}
 
 	/**
+	 * @deprecated The function will return the result array. For getting Entity objects, use EntityProvider::getEntitiesFromSitelinks
 	 * @param string[] $sites identifier for the site on which the corresponding page resides
 	 * @param string[] $titles the title of the corresponding page
 	 * @param string[] $languages Languages for labels/descriptions
@@ -79,6 +82,7 @@ class WikibaseApi extends Api {
 	}
 
 	/**
+	 * @deprecated use EntityProvider::getEntityFromSitelink
 	 * @param string $site identifier for the site on which the corresponding page resides
 	 * @param string $title the title of the corresponding page
 	 * @param string[] $languages Languages for labels/descriptions

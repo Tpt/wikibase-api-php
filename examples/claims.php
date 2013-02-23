@@ -7,11 +7,14 @@ include '../include.php';
 //Instance the Api object with the base domain of the wiki and the user agent.
 $api = new WikibaseApi( 'wikidata-test-repo.wikimedia.de', 'WikibasePhpLibExample/0.1' );
 
+//Instance the entity provider that allows to get entites from the wiki
+$entityProvider = new EntityProvider( $api );
+
 //login with user:demo and test as password
 $api->login( 'demo', 'test' );
 
 //Get an entity
-$entity = $api->getEntityFromId( 'q82' );
+$entity = $entityProvider->getEntityFromId( EntityId::newFromPrefixedId( 'q82' ) );
 
 //Create a new statement
 $statement = $entity->createStatementForSnak( new Snak( 'value', 'p3', EntityId::newFromPrefixedId( 'Q22' ) ) );

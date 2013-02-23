@@ -7,14 +7,14 @@ include '../include.php';
 //Instance the Api object with the base domain of the wiki and the user agent.
 $api = new WikibaseApi( 'wikidata-test-repo.wikimedia.de', 'WikibasePhpLibExample/1.0' );
 
+//Instance the entity provider that allows to get entites from the wiki
+$entityProvider = new EntityProvider( $api );
+
 //login with user:demo and test as password
 $api->login( 'demo', 'test' );
 
-//Get some entities
-$entities = $api->getEntitiesFromIds( array( 'q82' ) );
-
-//Get the entity q82 (we supposed here that all works fine)
-$entity = $entities['q82'];
+//Get an entity
+$entity = $entityProvider->getEntityFromId( EntityId::newFromPrefixedId( 'q82' ) );
 
 //Output the description in French
 echo $entity->getDescription( 'fr' );
