@@ -148,7 +148,7 @@ class Api {
 	}
 
 	/**
-	 * This function returns the edit token for the current user.
+	 * Returns the edit token for the current user.
 	 * @return string
 	 **/
 	public function getEditToken() {
