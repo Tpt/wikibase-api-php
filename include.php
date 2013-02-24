@@ -1,6 +1,6 @@
 <?php
 define( 'DATAVALUES', true );
-include_once __DIR__ . '/DataValues/DataValues.php';
+include_once __DIR__ . '/extensions/DataValues/DataValues.php';
 
 $dir = __DIR__ . '/includes/';
 include_once $dir . 'Http.php';
