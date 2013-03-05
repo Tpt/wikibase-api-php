@@ -14,7 +14,7 @@ $entityProvider = new EntityProvider( $api );
 $api->login( 'demo', 'test' );
 
 //Get an entity
-$entity = $entityProvider->getEntityFromId( EntityId::newFromPrefixedId( 'q82' ) );
+$entity = $entityProvider->getEntityFromId( EntityId::newFromPrefixedId( 'Q257' ) );
 
 //Output the description in French
 echo $entity->getDescription( 'fr' );

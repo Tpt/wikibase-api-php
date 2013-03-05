@@ -57,11 +57,8 @@ class Api {
 	 * @throws Exception
 	 */
 	public function get( $params ) {
-		$data = 'format=json';
-		foreach( $params as $name => $value ) {
-			$data .= '&' . $name . '=' . rawurlencode( $value );
-		}
-		$url = $this->wiki . '/w/api.php?' . $data;
+		$params['format'] = 'json';
+		$url = $this->wiki . '/w/api.php?' . http_build_query($params);
 		$response = $this->http->get( $url );
 		$result = json_decode( $response, true );
 		if( isset( $result['error'] ) ) {
@@ -77,11 +74,8 @@ class Api {
 	 * @throws Exception
 	 */
 	public function post( $params, $postFields ) {
-		$data = 'format=json';
-		foreach( $params as $param_name => $param_value ) {
-			$data .= '&' . $param_name . '=' . rawurlencode( $param_value );
-		}
-		$url = $this->wiki . '/w/api.php?' . $data;
+		$params['format'] = 'json';
+		$url = $this->wiki . '/w/api.php?' . http_build_query($params);
 		$response = $this->http->post( $url, $postFields );
 		$result = json_decode( $response, true );
 		if( isset( $result['error'] ) ) {
