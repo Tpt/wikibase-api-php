@@ -95,20 +95,6 @@ class Snak implements Comparable, Copyable {
 	}
 
 	/**
-	 * @param string $type
-	 */
-	public function setType( $type ) {
-		$this->type = $type;
-	}
-
-	/**
-	 * @param \DataValues\DataValue $value
-	 */
-	public function setDataValue( \DataValues\DataValue $value ) {
-		$this->dataValue = $value;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function toArray() {
