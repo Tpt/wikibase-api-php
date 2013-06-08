@@ -41,8 +41,10 @@ class Statement extends Claim {
 			$this->rank = $data['rank'];
 		}
 		if( isset( $data['references'] ) ) {
-			$this->references = array();
-			//TODO
+			foreach( $data['references'] as $reference ) {
+				$snaks = reset( $reference['snaks'] );
+				$this->references[] = Snak::newFromArray( $snaks[0] );
+			}
 		}
 	}
 
@@ -51,5 +53,41 @@ class Statement extends Claim {
 	 */
 	public function getRank() {
 		return $this->rank;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getReferences() {
+		return $this->references;
+	}
+
+	/**
+	 * @param Snak[] $snaks the array of Snaks
+	 * @param string $reference a hash of the reference that should be updated. When not provided, a new reference is created
+	 * @param string $summary summary for the change
+	 */
+	public function setReferences( array $snaks, $reference = null, $summary = '' ) {
+		if( $this->id === null ) {
+			throw new Exception( 'No id available' );
+		}
+		else {
+			$snakArray = array();
+			foreach( $snaks as $snak ) {
+				$snakArray[$snak->getPropertyId()->getPrefixedId()] = $snak->toArray();
+			}
+			$result = $this->entity->getApi()->setReference( $this->id, json_encode( $snakArray ), $reference, $this->entity->getLastRevisionId(), $summary );
+			$this->updateDataFromResult( $result );
+		}
+	}
+
+	/**
+	 * Update data from the result of an API call
+	 */
+	protected function updateDataFromResult( $result ) {
+		parent::updateDataFromResult( $result );
+		if( isset( $result['reference'] ) ) {
+			$this->fillData( $result )
+		}
 	}
 }
