@@ -222,9 +222,6 @@ class WikibaseApi extends Api {
 			'statement' => $statement,
 			'references' => implode( $references, '|' )
 		);
-		if( $reference !== null ) {
-			$params['reference'] = $reference;
-		}
 		return $this->editAction( $params, array(), $baseRevisionId, $summary );
 	}
 
