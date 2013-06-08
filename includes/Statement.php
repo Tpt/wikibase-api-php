@@ -31,7 +31,7 @@ class Statement extends Claim {
 	protected $rank = 'normal';
 
 	/**
-	 * @var Snak[]
+	 * @var Reference[]
 	 */
 	protected $references = array();
 
@@ -42,8 +42,7 @@ class Statement extends Claim {
 		}
 		if( isset( $data['references'] ) ) {
 			foreach( $data['references'] as $reference ) {
-				$snaks = reset( $reference['snaks'] );
-				$this->references[] = Snak::newFromArray( $snaks[0] );
+				$this->references[] = Reference::newFromArray( this, $reference );
 			}
 		}
 	}
@@ -56,38 +55,23 @@ class Statement extends Claim {
 	}
 
 	/**
-	 * @return array
+	 * @return References[]
 	 */
 	public function getReferences() {
 		return $this->references;
 	}
 
 	/**
-	 * @param Snak[] $snaks the array of Snaks
-	 * @param string $reference a hash of the reference that should be updated. When not provided, a new reference is created
-	 * @param string $summary summary for the change
+	 * @param Reference $reference
 	 */
-	public function setReferences( array $snaks, $reference = null, $summary = '' ) {
-		if( $this->id === null ) {
-			throw new Exception( 'No id available' );
-		}
-		else {
-			$snakArray = array();
-			foreach( $snaks as $snak ) {
-				$snakArray[$snak->getPropertyId()->getPrefixedId()] = array( $snak->toArray() );
-			}
-			$result = $this->entity->getApi()->setReference( $this->id, json_encode( $snakArray ), $reference, $this->entity->getLastRevisionId(), $summary );
-			$this->updateDataFromResult( $result );
-		}
+	public function addReference( Reference $reference ) {
+		$this->references[$reference->getInternalId()] = $reference;
 	}
 
 	/**
-	 * Update data from the result of an API call
+	 * @param Reference $reference
 	 */
-	protected function updateDataFromResult( $result ) {
-		parent::updateDataFromResult( $result );
-		if( isset( $result['reference'] ) ) {
-			$this->fillData( $result )
-		}
+	public function removeReference( Reference $reference ) {
+		unset( $this->references[$reference->getInternalId()] );
 	}
 }
