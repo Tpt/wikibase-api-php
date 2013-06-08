@@ -106,7 +106,7 @@ class Reference {
 	public function save( $summary = '' ) {
 		$id = $this->statement->getId();
 		if( $id === null ) {
-			throw new Exception( 'Statement missing id' );
+			throw new Exception( 'Statement has no Id. Please save the statement first.' );
 		}
 		$snakArray = json_encode( self::getSnakArray( $this->snak ) );
 		$result = $this->statement->getEntity()->getApi()->setReference( $this->statement->getId(), $snakArray, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
@@ -140,8 +140,12 @@ class Reference {
 	 * @throws Exception
 	 */
 	public function deleteAndSave( $summary = '' ) {
+		$id = $this->statement->getId();
+		if( $id === null ) {
+			throw new Exception( 'Statement has no Id. Please save the statement first.' );
+		}
 		if( $this->hash !== null ) {
-			$this->statement->getEntity()->getApi()->removeReferences( array( $this->hash ), $this->statement->getEntity()->getLastRevisionId(), $summary );
+			$this->statement->getEntity()->getApi()->removeReferences( $id, array( $this->hash ), $this->statement->getEntity()->getLastRevisionId(), $summary );
 		}
 		$this->statement->removeReference( this );
 	}
