@@ -75,7 +75,7 @@ class Reference {
 	 * @throws Exception
 	 */
 	public static function newFromSnak( Statement $statement, Snak $snak ) {
-		$reference = self::newFromArray( $statement, self::getSnakArray( $snak ) );
+		$reference = self::newFromArray( $statement, array( 'snaks' => self::getSnakArray( $snak ) ) );
 		$statement->addReference( $reference );
 		return $reference;
 	}
@@ -104,12 +104,12 @@ class Reference {
 	 * @throws Exception
 	 */
 	public function save( $summary = '' ) {
-		$id = $statement->getId();
+		$id = $this->statement->getId();
 		if( $id === null ) {
 			throw new Exception( 'Statement missing id' );
 		}
 		$snakArray = json_encode( self::getSnakArray( $this->snak ) );
-		$result = $this->statement->getEntity()->getApi->setReference( $this->statement->getId(), $snakArray, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
+		$result = $this->statement->getEntity()->getApi()->setReference( $this->statement->getId(), $snakArray, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
 		$this->updateDataFromResult( $result );
 	}
 
