@@ -191,17 +191,17 @@ class WikibaseApi extends Api {
 
 	/**
 	 * @param string $statement GUID identifying the statement
-	 * @param string $snaks the snaks to set the reference to. JSON object with property ids pointing to arrays containing the snaks for that property
+	 * @param array $snaks the snaks to set the reference to. Array with property ids pointing to arrays containing the snaks for that property
 	 * @param string $reference a hash of the reference that should be updated. When not provided, a new reference is created
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
 	 * @throws Exception
 	 */
-	public function setReference( $statement, $snaks, $reference = null, $baseRevisionId = null, $summary = '' ) {
+	public function setReference( $statement, array $snaks, $reference = null, $baseRevisionId = null, $summary = '' ) {
 		$params = array(
 			'action' => 'wbsetreference',
 			'statement' => $statement,
-			'snaks' => $snaks
+			'snaks' => json_encode( $snaks )
 		);
 		if( $reference !== null ) {
 			$params['reference'] = $reference;
