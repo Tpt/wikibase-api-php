@@ -74,7 +74,7 @@ class Statement extends Claim {
 		else {
 			$snakArray = array();
 			foreach( $snaks as $snak ) {
-				$snakArray[$snak->getPropertyId()->getPrefixedId()] = $snak->toArray();
+				$snakArray[$snak->getPropertyId()->getPrefixedId()] = array( $snak->toArray() );
 			}
 			$result = $this->entity->getApi()->setReference( $this->id, json_encode( $snakArray ), $reference, $this->entity->getLastRevisionId(), $summary );
 			$this->updateDataFromResult( $result );
