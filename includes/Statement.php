@@ -31,7 +31,7 @@ class Statement extends Claim {
 	protected $rank = 'normal';
 
 	/**
-	 * @var Snak[]
+	 * @var Reference[]
 	 */
 	protected $references = array();
 
@@ -41,8 +41,10 @@ class Statement extends Claim {
 			$this->rank = $data['rank'];
 		}
 		if( isset( $data['references'] ) ) {
-			$this->references = array();
-			//TODO
+			foreach( $data['references'] as $ref ) {
+				$reference = Reference::newFromArray( $this, $ref );
+				$this->references[$reference->getInternalId()] = $reference;
+			}
 		}
 	}
 
@@ -51,5 +53,34 @@ class Statement extends Claim {
 	 */
 	public function getRank() {
 		return $this->rank;
+	}
+
+	/**
+	 * @return References[]
+	 */
+	public function getReferences() {
+		return $this->references;
+	}
+
+	/**
+	 * @param Reference $reference
+	 */
+	public function addReference( Reference $reference ) {
+		$this->references[$reference->getInternalId()] = $reference;
+	}
+
+	/**
+	 * @param Reference $reference
+	 */
+	public function removeReference( Reference $reference ) {
+		unset( $this->references[$reference->getInternalId()] );
+	}
+
+	/**
+	 * @param Snak $snak
+	 * @throws Exception
+	 */
+	public function createReferenceForSnak( Snak $snak ) {
+		return Reference::newFromSnaks( $this, array( $snak ) );
 	}
 }
