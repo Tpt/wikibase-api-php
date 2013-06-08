@@ -24,17 +24,26 @@
  * @author Thomas Pellissier Tanon
  */
 class Http {
+
+	/**
+	 * @var resource cURL-Handle
+	 */
 	protected $ch;
+
+	/**
+	 * Unique identifier for files
+	 * @var string
+	 */
 	protected $uid;
 
 	public function __construct( $userAgent = 'BaseBot' ) {
 		$this->ch = curl_init();
-		$this->uid = dechex( rand( 0,99999999 ) );
+		$this->uid = dechex( rand( 0, 99999999 ) );
 		curl_setopt( $this->ch, CURLOPT_USERAGENT, $userAgent );
 		curl_setopt( $this->ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $this->ch, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt( $this->ch,CURLOPT_COOKIEJAR, 'cookies.' . $this->uid . '.dat' );
-		curl_setopt( $this->ch,CURLOPT_COOKIEFILE, 'cookies.' . $this->uid . '.dat' );
+		curl_setopt( $this->ch, CURLOPT_COOKIEJAR, 'cookies.' . $this->uid . '.dat' );
+		curl_setopt( $this->ch, CURLOPT_COOKIEFILE, 'cookies.' . $this->uid . '.dat' );
 	}
 
 	public function __destruct() {
