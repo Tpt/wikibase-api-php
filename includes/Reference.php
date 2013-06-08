@@ -31,9 +31,9 @@ class Reference {
 	protected $statement;
 
 	/**
-	 * @var Snak
+	 * @var array "property id" => Snak[]
 	 */
-	protected $snak;
+	protected $snaks;
 
 	/**
 	 * @var string
@@ -52,8 +52,13 @@ class Reference {
 
 	protected function fillData( array $data ) {
 		if( isset( $data['snaks'] ) ) {
-			$snaks = reset( $data['snaks'] );
-			$this->snak = Snak::newFromArray( $snaks[0] );
+			foreach( $data['snaks'] as $prop => $list ) {
+				$this->snaks[$prop] = array();
+				foreach( $list as $val ) {
+					$snak = Snak::newFromArray( $val );
+					$this->snaks[$prop][$snak->getDataValue()->getHash()] = $snak;
+				}
+			}
 		}
 		if( isset( $data['hash'] ) ) {
 			$this->hash = $data['hash'];
@@ -67,15 +72,19 @@ class Reference {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param Statement $statement
-	 * @param Snak $snak snak to be used as main snak
+	 * @param Snak[] $snaks
 	 * @return Reference
 	 * @throws Exception
 	 */
-	public static function newFromSnak( Statement $statement, Snak $snak ) {
-		$reference = self::newFromArray( $statement, array( 'snaks' => self::getSnakArray( $snak ) ) );
+	public static function newFromSnaks( Statement $statemen, array $snaks ) {
+		$snakArray = array();
+		foreach( $snaks as $snak ) {
+			$snakArray[$snak->getPropertyId()->getPrefixedId()][] = $snak->toArray();
+		}
+		$reference = self::newFromArray( $statement, $snakArray );
 		$statement->addReference( $reference );
 		return $reference;
 	}
@@ -98,10 +107,27 @@ class Reference {
 	}
 
 	/**
-	 * @return Snak
+	 * @return array "property id" => Snak[]
 	 */
-	public function getSnak() {
-		return $this->snak;
+	public function getSnaks() {
+		return $this->snaks;
+	}
+
+	/**
+	 * @param Snak $snak
+	 */
+	public function addSnak( Snak $snak ) {
+		if( !isset( $this->snacks[$snak->getPropertyId()->getPrefixedId()] ) ) {
+			$this->snacks[$snak->getPropertyId()->getPrefixedId()] = array();
+		}
+		$this->snacks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] = $snak;
+	}
+
+	/**
+	 * @param Snak $snak
+	 */
+	public function removeSnak( Snak $snak ) {
+		unset( $this->snacks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] );
 	}
 
 	/**
@@ -122,17 +148,8 @@ class Reference {
 		if( $id === null ) {
 			throw new Exception( 'Statement has no Id. Please save the statement first.' );
 		}
-		$snakArray = json_encode( self::getSnakArray( $this->snak ) );
-		$result = $this->statement->getEntity()->getApi()->setReference( $this->statement->getId(), $snakArray, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
+		$result = $this->statement->getEntity()->getApi()->setReference( $this->statement->getId(), $this->snaks, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
 		$this->updateDataFromResult( $result );
-	}
-
-	/**
-	 * @param Snak $snak
-	 * @return array
-	 */
-	protected static function getSnakArray( Snak $snak ) {
-		return array( $snak->getPropertyId()->getPrefixedId() => array( $snak->toArray() ) );
 	}
 
 	/**
