@@ -31,8 +31,7 @@ class Http {
 	protected $ch;
 
 	/**
-	 * Unique identifier for files
-	 * @var string
+	 * @var string Unique identifier for files
 	 */
 	protected $uid;
 
