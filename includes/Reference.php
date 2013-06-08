@@ -91,6 +91,20 @@ class Reference {
 	}
 
 	/**
+	 * @return Statement
+	 */
+	public function getStatement() {
+		return $this->statement;
+	}
+
+	/**
+	 * @return Snak
+	 */
+	public function getSnak() {
+		return $this->snak;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getInternalId() {
