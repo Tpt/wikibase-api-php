@@ -42,7 +42,7 @@ class Statement extends Claim {
 		}
 		if( isset( $data['references'] ) ) {
 			foreach( $data['references'] as $reference ) {
-				$this->references[] = Reference::newFromArray( this, $reference );
+				$this->references[] = Reference::newFromArray( $this, $reference );
 			}
 		}
 	}
