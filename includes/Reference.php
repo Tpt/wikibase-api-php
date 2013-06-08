@@ -33,7 +33,7 @@ class Reference {
 	/**
 	 * @var array "property id" => Snak[]
 	 */
-	protected $snaks;
+	protected $snaks = array();
 
 	/**
 	 * @var string
@@ -80,11 +80,10 @@ class Reference {
 	 * @throws Exception
 	 */
 	public static function newFromSnaks( Statement $statement, array $snaks ) {
-		$snakArray = array();
+		$reference = self::newFromArray( $statement, array() );
 		foreach( $snaks as $snak ) {
-			$snakArray[$snak->getPropertyId()->getPrefixedId()][] = $snak->toArray();
+			$reference->addSnak( $snak );
 		}
-		$reference = self::newFromArray( $statement, $snakArray );
 		$statement->addReference( $reference );
 		return $reference;
 	}
@@ -117,17 +116,17 @@ class Reference {
 	 * @param Snak $snak
 	 */
 	public function addSnak( Snak $snak ) {
-		if( !isset( $this->snacks[$snak->getPropertyId()->getPrefixedId()] ) ) {
-			$this->snacks[$snak->getPropertyId()->getPrefixedId()] = array();
+		if( !isset( $this->snaks[$snak->getPropertyId()->getPrefixedId()] ) ) {
+			$this->snaks[$snak->getPropertyId()->getPrefixedId()] = array();
 		}
-		$this->snacks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] = $snak;
+		$this->snaks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] = $snak;
 	}
 
 	/**
 	 * @param Snak $snak
 	 */
 	public function removeSnak( Snak $snak ) {
-		unset( $this->snacks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] );
+		unset( $this->snaks[$snak->getPropertyId()->getPrefixedId()][$snak->getDataValue()->getHash()] );
 	}
 
 	/**
@@ -148,7 +147,14 @@ class Reference {
 		if( $id === null ) {
 			throw new Exception( 'Statement has no Id. Please save the statement first.' );
 		}
-		$result = $this->statement->getEntity()->getApi()->setReference( $this->statement->getId(), $this->snaks, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
+		$snakArray = array();
+		foreach( $this->snaks as $prop => $list ) {
+			$snakArray[$prop] = array();
+			foreach( $list as $snak ) {
+				$snakArray[$prop][] = $snak->toArray();
+			}
+		}
+		$result = $this->statement->getEntity()->getApi()->setReference( $id, $snakArray, $this->hash, $this->statement->getEntity()->getLastRevisionId(), $summary );
 		$this->updateDataFromResult( $result );
 	}
 
