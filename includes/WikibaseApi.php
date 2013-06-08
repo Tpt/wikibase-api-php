@@ -210,6 +210,25 @@ class WikibaseApi extends Api {
 	}
 
 	/**
+	 * @param string $statement GUID identifying the statement
+	 * @param string[] $references hashes of the references that should be removed.
+	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
+	 * @param string $summary summary for the change
+	 * @throws Exception
+	 */
+	public function removeReferences( $statement, array $references, $baseRevisionId = null, $summary = '' ) {
+		$params = array(
+			'action' => 'wbremovereferences',
+			'statement' => $statement,
+			'references' => implode( $references, '|' )
+		);
+		if( $reference !== null ) {
+			$params['reference'] = $reference;
+		}
+		return $this->editAction( $params, array(), $baseRevisionId, $summary );
+	}
+
+	/**
 	 * @param string[] $params params used for the edition
 	 * @param string[] $postParams params to POST
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
