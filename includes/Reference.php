@@ -147,6 +147,6 @@ class Reference {
 		if( $this->hash !== null ) {
 			$this->statement->getEntity()->getApi()->removeReferences( $id, array( $this->hash ), $this->statement->getEntity()->getLastRevisionId(), $summary );
 		}
-		$this->statement->removeReference( this );
+		$this->statement->removeReference( $this );
 	}
 }
