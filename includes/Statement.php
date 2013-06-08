@@ -81,6 +81,6 @@ class Statement extends Claim {
 	 * @throws Exception
 	 */
 	public function createReferenceForSnak( Snak $snak ) {
-		return Reference::newFromSnak( $this, $snak );
+		return Reference::newFromSnaks( $this, array( $snak ) );
 	}
 }
