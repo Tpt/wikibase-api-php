@@ -14,6 +14,7 @@ include_once $dir . 'Property.php';
 include_once $dir . 'Claim.php';
 include_once $dir . 'Statement.php';
 include_once $dir . 'Snak.php';
+include_once $dir . 'Reference.php';
 
 $wgDataValues['wikibase-entityid'] = 'EntityId';
 $wgDataTypes += array(
