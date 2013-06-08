@@ -79,7 +79,7 @@ class Reference {
 	 * @return Reference
 	 * @throws Exception
 	 */
-	public static function newFromSnaks( Statement $statemen, array $snaks ) {
+	public static function newFromSnaks( Statement $statement, array $snaks ) {
 		$snakArray = array();
 		foreach( $snaks as $snak ) {
 			$snakArray[$snak->getPropertyId()->getPrefixedId()][] = $snak->toArray();
