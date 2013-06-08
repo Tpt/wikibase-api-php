@@ -69,6 +69,7 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
 		curl_setopt( $this->ch, CURLOPT_POST, true );
 		curl_setopt( $this->ch, CURLOPT_POSTFIELDS, $postFields );
+		curl_setopt( $this->ch, CURLOPT_HTTPHEADER, aray( 'Expect:' ) );
 		$response = curl_exec( $this->ch );
 		if( curl_errno( $this->ch ) ) {
 			throw new Exception( curl_error( $this->ch ), curl_errno( $this->ch ) );
