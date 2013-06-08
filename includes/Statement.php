@@ -74,4 +74,12 @@ class Statement extends Claim {
 	public function removeReference( Reference $reference ) {
 		unset( $this->references[$reference->getInternalId()] );
 	}
+
+	/**
+	 * @param Snak $snak
+	 * @throws Exception
+	 */
+	public function createReferenceForSnak( Snak $snak ) {
+		return Reference::newFromSnak( $this, $snak );
+	}
 }
