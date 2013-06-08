@@ -41,8 +41,9 @@ class Statement extends Claim {
 			$this->rank = $data['rank'];
 		}
 		if( isset( $data['references'] ) ) {
-			foreach( $data['references'] as $reference ) {
-				$this->references[$reference->getInternalId()] = Reference::newFromArray( $this, $reference );
+			foreach( $data['references'] as $ref ) {
+				$reference = Reference::newFromArray( $this, $ref );
+				$this->references[$reference->getInternalId()] = $reference;
 			}
 		}
 	}
