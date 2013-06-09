@@ -88,7 +88,7 @@ class Claim {
 	 * @return Claim
 	 * @throws Exception
 	 */
-	public function newFromSnak( Entity $entity, Snak $snak, $type = 'claim' ) {
+	public static function newFromSnak( Entity $entity, Snak $snak, $type = 'claim' ) {
 		$claim = self::newFromArray( $entity, array(
 			'mainsnak' => $snak->toArray(),
 			'type' => $type
@@ -106,7 +106,7 @@ class Claim {
 	 * @return Claim
 	 * @throws Exception
 	 */
-	public function newFromArray( Entity $entity, array $data ) {
+	public static function newFromArray( Entity $entity, array $data ) {
 		if( isset( $data['type'] ) ) {
 			switch( $data['type'] ) {
 				case 'statement':
@@ -138,6 +138,13 @@ class Claim {
 	 */
 	public function getMainSnak() {
 		return $this->mainSnak;
+	}
+
+	/**
+	 * @return Entity
+	 */
+	public function getEntity() {
+		return $this->entity;
 	}
 
 	/**
