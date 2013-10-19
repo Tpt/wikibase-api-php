@@ -39,6 +39,13 @@ class Property extends Entity {
 	}
 
 	/**
+	 * @return string the type
+	 */
+	public function getType() {
+		return 'property';
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getDatatype() {
