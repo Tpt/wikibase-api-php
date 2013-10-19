@@ -41,6 +41,13 @@ class Item extends Entity {
 	}
 
 	/**
+	 * @return string the type
+	 */
+	public function getType() {
+		return 'item';
+	}
+
+	/**
 	 * @return array site => title
 	 */
 	public function getSitelinks() {
