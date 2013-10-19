@@ -301,14 +301,24 @@ abstract class Entity {
 	 */
 	public function save( $summary = '' ) {
 		if( $this->changes === array() ) {
-			return; //Nothing to do
+			return; // Nothing to do
 		}
-		$result = $this->api->editEntity( $this->id->getPrefixedId(), $this->changes, $this->lastRevisionId, $summary );
+		if( $this->id === null ) {
+			$result = $this->api->createEntity( $this->getType(), $this->changes, $this->lastRevisionId, $summary );
+		}
+		else {
+			$result = $this->api->editEntity( $this->id->getPrefixedId(), $this->changes, $this->lastRevisionId, $summary );
+		}
 		if( isset( $result['entity'] ) ) {
 			$this->fillData( $result['entity'] );
 		}
 		$this->changes = array();
 	}
+
+	/**
+	 * @return string the type of the entity, one of "item" or "property"
+	 */
+	public abstract function getType();
 
 	/**
 	 * @protected
