@@ -114,7 +114,7 @@ class WikibaseApi extends Api {
 	}
 
 	/**
-	 * @param string|null $id id of the entity edited. null to reate a new entity
+	 * @param string $id id of the entity edited
 	 * @param array $data data to be sets
 	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
 	 * @param string $summary summary for the change
@@ -124,11 +124,27 @@ class WikibaseApi extends Api {
 		$params = array(
 			'action' => 'wbeditentity'
 		);
-		if( $id !== null ) {
-			$params['id'] = $id;
-		}
 		$postParams = array(
-			'data' => json_encode( $data )
+			'data' => json_encode( $data ),
+			'id' => $id
+		);
+		return $this->editAction( $params, $postParams, $baseRevisionId, $summary );
+	}
+
+	/**
+	 * @param string $type type of the entity to create
+	 * @param array $data data to be sets
+	 * @param integer|null $baseRevisionId The numeric identifier for the revision to base the modification on
+	 * @param string $summary summary for the change
+	 * @throws Exception
+	 */
+	public function createEntity( $type, array $data = array(), $baseRevisionId = null, $summary = '' ) {
+		$params = array(
+			'action' => 'wbeditentity'
+		);
+		$postParams = array(
+			'data' => json_encode( $data),
+			'new' => $type
 		);
 		return $this->editAction( $params, $postParams, $baseRevisionId, $summary );
 	}
